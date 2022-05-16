@@ -7,7 +7,7 @@ import numpy as np
 import re
 
 # Classes 
-
+# Werden im dashboard mit "import utilities as ut" importiert und somit auch aufgerufen
 class Subject():
     def __init__(self, file_name):
 

@@ -26,7 +26,7 @@ class Subject():
         self.temp = self.subject_data["Temp (C)"]
         self.blood_flow = self.subject_data["Blood Flow (ml/s)"]
         print('Subject ' + self.subject_id + ' initialized')
-        #nn
+        
 
 
 

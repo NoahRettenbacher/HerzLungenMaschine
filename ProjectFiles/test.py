@@ -32,9 +32,11 @@ df = list_of_subjects[0].subject_data
 
 grp=df[['SpO2 (%)','Temp (C)', 'Blood Flow (ml/s)']].agg(['max','idxmax','min','idxmin'])
 #print(grp)
-y=grp.loc[['max','min']]
+y=grp.loc[['max','min','idxmax','idxmin']]
+index = y.loc['idxmax','SpO2 (%)']
 print(y)
-x=grp.loc[['idxmax','idxmin']]
-print(x)
+print(index)
+#x=grp.loc[['idxmax','idxmin']]
+#print(x)
 
 

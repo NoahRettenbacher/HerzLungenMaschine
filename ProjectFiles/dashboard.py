@@ -122,7 +122,7 @@ def update_figure(value, algorithm_checkmarks):
     extrema=grp.loc[['max','min','idxmax','idxmin']]
     print(extrema)
 
-    # Kommentar!!!
+    # Points on min and max
     if 'max' in algorithm_checkmarks:
         fig0.add_trace(go.Scatter(x= [extrema.loc['idxmax','SpO2 (%)']], y = [extrema.loc['max','SpO2 (%)']],
                     mode='markers', name='max', marker_color= 'green'))
@@ -143,9 +143,6 @@ def update_figure(value, algorithm_checkmarks):
         fig2.add_trace(go.Scatter(x= [extrema.loc['idxmin','Temp (C)']], y = [extrema.loc['min','Temp (C)']],
                     mode='markers', name='min', marker_color= 'red'))
         
-
-
-    
     return fig0, fig1, fig2 
 
 
@@ -166,13 +163,19 @@ def bloodflow_figure(value, bloodflow_checkmarks):
 
     # Aufgabe START
     # cumulative moving average
-    if 'CMA' in bloodflow_checkmarks:
+    if 'SMA' in bloodflow_checkmarks:
+        bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
+        #fig3 = px.line(bf, x="Time (s)", y="BF_SMA")
+        fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))
+    
     
     # simple moving average
-    if 'SMA' in bloodflow_checkmarks:
+    if 'CMA' in bloodflow_checkmarks:
+        bf["BF_CMA"] = ut.calculate_CMA(bf["Blood Flow (ml/s)"],2) 
+        fig3 = px.line(bf, x="Time (s)", y="BF_CMA")
 
 
-    if 'Show Limits' in bloodflow_checkmarks:
+    #if 'Show Limits' in bloodflow_checkmarks:
 
 
     return fig3

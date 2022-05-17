@@ -43,7 +43,7 @@ df = list_of_subjects[0].subject_data
 # simple moving average
 bf = df['Blood Flow (ml/s)'].to_frame()
 # spalte SMA30 wird geaddet
-bf['SMA30'] = bf['Blood Flow (ml/s)'].rolling(15).mean()
+bf['SMA30'] = bf['Blood Flow (ml/s)'].rolling().mean()
 # removing all the null values
 # bf.dropna(inplace=true)
 print(bf)

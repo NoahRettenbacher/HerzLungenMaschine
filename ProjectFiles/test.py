@@ -30,8 +30,8 @@ for file in os.listdir(folder_input_data):
 
 df = list_of_subjects[0].subject_data
 
-# grp=df[['SpO2 (%)','Temp (C)', 'Blood Flow (ml/s)']].agg(['max','idxmax','min','idxmin'])
-# #print(grp)
+grp=df[['SpO2 (%)','Temp (C)', 'Blood Flow (ml/s)']].agg(['max','idxmax','min','idxmin'])
+print(grp)
 # y=grp.loc[['max','min','idxmax','idxmin']]
 # index = y.loc['idxmax','SpO2 (%)']
 # print(y)
@@ -41,16 +41,34 @@ df = list_of_subjects[0].subject_data
 
 # blood flow wird benötigt
 # simple moving average
-bf = df['Blood Flow (ml/s)'].to_frame()
+#bf = df['Blood Flow (ml/s)'].to_frame()
 # spalte SMA30 wird geaddet
-bf['SMA30'] = bf['Blood Flow (ml/s)'].rolling().mean()
+#bf['SMA30'] = bf['Blood Flow (ml/s)'].rolling().mean()
 # removing all the null values
 # bf.dropna(inplace=true)
-print(bf)
+#print(bf)
 
 # cumulative moving average
-bf['CMA30'] = bf['Blood Flow (ml/s)'].expanding().mean()
-print(bf)
+#bf['CMA30'] = bf['Blood Flow (ml/s)'].expanding().mean()
+#print(bf)
 # Graph hinzufügen 
 # fig.add_trace(go.Scatter(y=[4, 2, 1], mode="lines")
 
+#3.1
+#bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
+#print(bf_avg)
+#3.3
+def bloodflow_figure(value, bloodflow_checkmarks):
+
+    bf = list_of_subjects[int(value)-1].subject_data
+    bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
+    bf_avg = bf.mean()
+    y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
+
+    y_high1= []
+    
+    for element in bf['BF_SMA']:
+        if element > y_high:
+            y_high1.append(element)
+
+    print(y_high1)

@@ -1,3 +1,4 @@
+from audioop import avg
 from cmath import nan
 from tempfile import SpooledTemporaryFile
 import dash
@@ -120,9 +121,9 @@ def update_figure(value, algorithm_checkmarks):
     grp=ts[['SpO2 (%)','Temp (C)', 'Blood Flow (ml/s)']].agg(['max','idxmax','min','idxmin'])
 
     extrema=grp.loc[['max','min','idxmax','idxmin']]
-    print(extrema)
+    #print(extrema)
 
-    # Points on min and max
+    # Markers on min and max in Dashboard 
     if 'max' in algorithm_checkmarks:
         fig0.add_trace(go.Scatter(x= [extrema.loc['idxmax','SpO2 (%)']], y = [extrema.loc['max','SpO2 (%)']],
                     mode='markers', name='max', marker_color= 'green'))
@@ -163,22 +164,45 @@ def bloodflow_figure(value, bloodflow_checkmarks):
 
     # Aufgabe START
     # cumulative moving average
-    if 'SMA' in bloodflow_checkmarks:
-        bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
-        #fig3 = px.line(bf, x="Time (s)", y="BF_SMA")
-        fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))
+    if bloodflow_checkmarks is not None:
+        if 'SMA' in bloodflow_checkmarks==['SMA']:
+            bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
+            fig3 = px.line(bf, x="Time (s)", y="BF_SMA")
+            #fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))
     
     
     # simple moving average
-    if 'CMA' in bloodflow_checkmarks:
-        bf["BF_CMA"] = ut.calculate_CMA(bf["Blood Flow (ml/s)"],2) 
-        fig3 = px.line(bf, x="Time (s)", y="BF_CMA")
+        if 'CMA' in bloodflow_checkmarks ==['CMA']:
+            bf["BF_CMA"] = ut.calculate_CMA(bf["Blood Flow (ml/s)"],3) 
+            fig3 = px.line(bf, x="Time (s)", y="BF_CMA")
 
 
     #if 'Show Limits' in bloodflow_checkmarks:
 
+    #Aufgabe 3.1 average Blood Flow:
+    #bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
+    bf_avg = bf.mean()
+    x= [0,480]
+    y=bf_avg.loc['Blood Flow (ml/s)']
+    #scatter methode 
+    fig3.add_trace(go.Scatter(x=x,y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
+    
+    #3.2 15% Intervalls
+    y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
+    fig3.add_trace(go.Scatter(x = x, y = [y_high,y_high],mode = 'lines', marker_color = 'green', name = 'upper Limit'))
+
+    y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
+    fig3.add_trace(go.Scatter(x = x, y = [y_low,y_low],mode = 'lines', marker_color = 'red', name = 'lower Limit'))
+
+    #3.3 
+    
 
     return fig3
+
+    #Aufgabe 3.1 average Blood Flow:
+    
+    
+    
 
 if __name__ == '__main__':
     app.run_server(debug=True)

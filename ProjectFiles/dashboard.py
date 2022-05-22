@@ -13,6 +13,12 @@ import re
 
 app = Dash(__name__)
 
+colors = {
+    'background': '#3e405f',
+    'text':  ' #c1c3d8',
+    'dropdown': "#7981f3"
+}
+
 
 list_of_subjects = []
 subj_numbers = []
@@ -38,7 +44,7 @@ for i in range(number_of_subjects):
 
 data_names = ["SpO2 (%)", "Blood Flow (ml/s)","Temp (C)"]
 algorithm_names = ['min','max']
-blood_flow_functions = ['CMA','SMA','Show Limits']
+blood_flow_functions = ['CMA','SMA','Show Limits','Average']
 
 
 fig0= go.Figure()
@@ -52,24 +58,27 @@ fig2 = px.line(df, x="Time (s)", y = "Temp (C)")
 fig3 = px.line(df, x="Time (s)", y = "Blood Flow (ml/s)")
 
 app.layout = html.Div(children=[
-    html.H1(children='Cardiopulmonary Bypass Dashboard'),
+    html.H1(children='Cardiopulmonary Bypass Dashboard', style={'color': colors['text']}),
 
     html.Div(children='''
-        Hier könnten Informationen zum Patienten stehen....
+        Select the Patient ID 
     '''),
-
-    dcc.Checklist(
-    id= 'checklist-algo',
-    options=algorithm_names,
-    inline=False
-    ),
-
+    
     html.Div([
-        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown'),
+        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'Color': colors['dropdown']}),
     html.Div(id='dd-output-container')
     ],
-        style={"width": "15%"}
+        style={"width": "5%"}
     ),
+
+
+  #Min, Max
+    dcc.Checklist(style={'Color': colors['text']},
+        id= 'checklist-algo',
+        options=algorithm_names,
+        inline=False
+        ),
+        
 
     dcc.Graph(
         id='dash-graph0',
@@ -80,6 +89,7 @@ app.layout = html.Div(children=[
         id='dash-graph1',
         figure=fig1
     ),
+
     dcc.Graph(
         id='dash-graph2',
         figure=fig2
@@ -164,37 +174,38 @@ def bloodflow_figure(value, bloodflow_checkmarks):
 
     bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],4) 
 
-    # cumulative moving average
     if bloodflow_checkmarks is not None: 
+        # simple moving average
         if 'SMA' in bloodflow_checkmarks:
             #bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
-            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_SMA"],mode='lines', marker_color = 'turquoise', name= 'SMA'))
+            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_SMA"],mode='lines', marker_color = 'orange', name= 'SMA'))
             #fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))          
             
-    
-    
-    # simple moving average
+        # cumulative moving average
         if 'CMA' in bloodflow_checkmarks:
             bf["BF_CMA"] = ut.calculate_CMA(bf["Blood Flow (ml/s)"],3) 
-            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_CMA"],mode='lines', marker_color = 'yellow', name= 'CMA'))
+            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_CMA"],mode='lines', marker_color = 'turquoise', name= 'CMA'))
 
-
+        #Aufgabe 3.1 average Blood Flow:
         if 'Show Limits' in bloodflow_checkmarks:
-
-            #Aufgabe 3.1 average Blood Flow:
             #bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
             bf_avg = bf.mean()
             x= [0,480]
             y=bf_avg.loc['Blood Flow (ml/s)']
-            #scatter methode 
-            fig3.add_trace(go.Scatter(x=x,y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
-    
+
             #3.2 15% Intervalls
             y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
             fig3.add_trace(go.Scatter(x = x, y = [y_high,y_high],mode = 'lines', marker_color = 'green', name = 'upper Limit'))
 
             y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
             fig3.add_trace(go.Scatter(x = x, y = [y_low,y_low],mode = 'lines', marker_color = 'red', name = 'lower Limit'))
+
+        if 'Average' in bloodflow_checkmarks:
+            bf_avg = bf.mean()
+            x= [0,480]
+            y=bf_avg.loc['Blood Flow (ml/s)']
+            #scatter methode 
+            fig3.add_trace(go.Scatter(x=x,y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
 
 
 

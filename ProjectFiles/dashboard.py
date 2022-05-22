@@ -162,46 +162,70 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
 
+    bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],4) 
+
     # cumulative moving average
     if bloodflow_checkmarks is not None: 
         if 'SMA' in bloodflow_checkmarks:
-            bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
-            fig3 = px.line(bf, x="Time (s)", y="BF_SMA")
-            #fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))
+            #bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],5) 
+            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_SMA"],mode='lines', marker_color = 'turquoise', name= 'SMA'))
+            #fig3.add_trace(go.Scatter(y=bf.loc['BF_SMA'], mode="lines"))          
+            
     
     
     # simple moving average
         if 'CMA' in bloodflow_checkmarks:
             bf["BF_CMA"] = ut.calculate_CMA(bf["Blood Flow (ml/s)"],3) 
-            fig3 = px.line(bf, x="Time (s)", y="BF_CMA")
+            fig3.add_trace(go.Scatter(x=bf["Time (s)"],y=bf["BF_CMA"],mode='lines', marker_color = 'yellow', name= 'CMA'))
 
 
         if 'Show Limits' in bloodflow_checkmarks:
 
-    #Aufgabe 3.1 average Blood Flow:
-    #bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
+            #Aufgabe 3.1 average Blood Flow:
+            #bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
             bf_avg = bf.mean()
             x= [0,480]
             y=bf_avg.loc['Blood Flow (ml/s)']
-    #scatter methode 
+            #scatter methode 
             fig3.add_trace(go.Scatter(x=x,y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
     
-    #3.2 15% Intervalls
+            #3.2 15% Intervalls
             y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
             fig3.add_trace(go.Scatter(x = x, y = [y_high,y_high],mode = 'lines', marker_color = 'green', name = 'upper Limit'))
 
             y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
             fig3.add_trace(go.Scatter(x = x, y = [y_low,y_low],mode = 'lines', marker_color = 'red', name = 'lower Limit'))
 
-    #3.3 
+
+
+    # Aufgabe 3.3
+   
+    # alert_sum = 0 #int, holds count of invalid values
+    # bf_SMA = bf["BF_SMA"]
+
+    # for i in bf_SMA:
+    #     if i > y_high or i < y_low: # is simple moving average value '>' or '<' than the limit
+    #         #alert_count.append(bf.index[bf_SMA==i].tolist()) # append list of invalid values to list
+    #         alert_sum += 1 #for each invalid value, alert_sum is going up by 1
+
+    # print(str(alert_sum))
+
+    # # Defining alert message shown in textarea
+
+
     
 
     return fig3
 
-    #Aufgabe 3.1 average Blood Flow:
+
     
     
     
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
+# Theoretische Antworten 
+# 3.4 Bei großen n wird ein hoher andauernder Bloodflow erst spät erkannt, deswegen muss n so gesetzt werden, dass Außreiser unterhalb des Limits bleiben, aber hohe andauernde Werte schon.
+# Aufgrund dessen wird n = 4 gewählt.

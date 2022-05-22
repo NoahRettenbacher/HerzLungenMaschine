@@ -40,3 +40,9 @@ def calculate_CMA(df,n):
 
 def calculate_SMA(df,n):
     return df.rolling(n).mean()
+
+
+# Aufgabe 4
+# 4.1 Sinnvoll bei Signalen mit hohem Rauschen und/oder kurzen Ausreißern. zB Aktienkurs bei Börsen
+# Ungeeignet für Echtzeitsignale
+# 4.2 Je größer n, desto mehr Anfangswerte können nicht berechnet werden und hohe Flanken im Signal werden starkt geglättet.

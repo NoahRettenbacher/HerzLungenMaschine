@@ -65,7 +65,7 @@ app.layout = html.Div(children=[
     '''),
     
     html.Div([
-        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'Color': colors['dropdown']}),
+        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'BackgroundColor': colors['dropdown']}),
     html.Div(id='dd-output-container')
     ],
         style={"width": "5%"}
@@ -73,7 +73,7 @@ app.layout = html.Div(children=[
 
 
   #Min, Max
-    dcc.Checklist(style={'Color': colors['text']},
+    dcc.Checklist(style={'Color': colors['text'],'BackgroundColor': colors['background']},
         id= 'checklist-algo',
         options=algorithm_names,
         inline=False
@@ -125,6 +125,30 @@ def update_figure(value, algorithm_checkmarks):
     fig1 = px.line(ts, x="Time (s)", y = data_names[1])
     # Blood Temperature
     fig2 = px.line(ts, x="Time (s)", y = data_names[2])
+
+    # fig0.update_layout(
+    # plot_bgcolor=colors['background'],
+    # paper_bgcolor=colors['background'],
+    # font_color=colors['text']
+    # )
+
+    # fig1.update_layout(
+    # plot_bgcolor=colors['background'],
+    # paper_bgcolor=colors['background'],
+    # font_color=colors['text']
+    # )
+
+    # fig2.update_layout(
+    # plot_bgcolor=colors['background'],
+    # paper_bgcolor=colors['background'],
+    # font_color=colors['text']
+    # )
+
+    # fig3.update_layout(
+    # plot_bgcolor=colors['background'],
+    # paper_bgcolor=colors['background'],
+    # font_color=colors['text']
+    # )
     
     ### Aufgabe 2: Min / Max ###
 
@@ -171,6 +195,13 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     print(bloodflow_checkmarks)
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
+
+    # fig3.update_layout(
+    # plot_bgcolor=colors['background'],
+    # paper_bgcolor=colors['background'],
+    # font_color=colors['text']
+    # )
+    
 
     bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],4) 
 

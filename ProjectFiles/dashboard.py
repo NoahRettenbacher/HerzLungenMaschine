@@ -14,9 +14,10 @@ import re
 app = Dash(__name__)
 
 colors = {
-    'background': '#3e405f',
+    'background': '#3e405f', ##f8f9fd
     'text':  ' #c1c3d8',
-    'dropdown': "#7981f3"
+    'dropdown': "#7981f3",
+    'paper': '#7f83aa'
 }
 
 
@@ -242,31 +243,13 @@ def bloodflow_figure(value, bloodflow_checkmarks):
 
     # Aufgabe 3.3
    
-    # alert_sum = 0 #int, holds count of invalid values
-    # bf_SMA = bf["BF_SMA"]
-
-    # for i in bf_SMA:
-    #     if i > y_high or i < y_low: # is simple moving average value '>' or '<' than the limit
-    #         #alert_count.append(bf.index[bf_SMA==i].tolist()) # append list of invalid values to list
-    #         alert_sum += 1 #for each invalid value, alert_sum is going up by 1
-
-    # print(str(alert_sum))
-
-    # # Defining alert message shown in textarea
-
-
-    
+      
 
     return fig3
-
-
-    
-    
-    
+     
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-
 
 # Theoretische Antworten 
 # 3.4 Bei großen n wird ein hoher andauernder Bloodflow erst spät erkannt, deswegen muss n so gesetzt werden, dass Außreiser unterhalb des Limits bleiben, aber hohe andauernde Werte schon.

@@ -200,6 +200,18 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     
 
     bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],4) 
+    #Aufgabe 3.3 
+    bf_avg = bf.mean()
+    y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
+    y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
+    over_limit = 0
+    SMA = bf["BF_SMA"]
+    for i in SMA:
+        if i > y_high or i < y_low:
+            over_limit += 1
+
+
+    print(over_limit)
 
     if bloodflow_checkmarks is not None: 
         # simple moving average
@@ -216,23 +228,21 @@ def bloodflow_figure(value, bloodflow_checkmarks):
         #Aufgabe 3.1 average Blood Flow:
         if 'Show Limits' in bloodflow_checkmarks:
             #bf_avg=df[['Blood Flow (ml/s)']].agg(['mean','idxmean'])
-            bf_avg = bf.mean()
-            x= [0,480]
+            #bf_avg = bf.mean()
             y=bf_avg.loc['Blood Flow (ml/s)']
 
             #3.2 15% Intervalls
-            y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
-            fig3.add_trace(go.Scatter(x = x, y = [y_high,y_high],mode = 'lines', marker_color = 'green', name = 'upper Limit'))
+            #y_high = (bf_avg.loc['Blood Flow (ml/s)'])*1.15
+            fig3.add_trace(go.Scatter(x = [0,480], y = [y_high,y_high],mode = 'lines', marker_color = 'green', name = 'upper Limit'))
 
-            y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
-            fig3.add_trace(go.Scatter(x = x, y = [y_low,y_low],mode = 'lines', marker_color = 'red', name = 'lower Limit'))
+            #y_low = (bf_avg.loc['Blood Flow (ml/s)'])*0.85
+            fig3.add_trace(go.Scatter(x = [0,480], y = [y_low,y_low],mode = 'lines', marker_color = 'red', name = 'lower Limit'))
 
         if 'Average' in bloodflow_checkmarks:
             bf_avg = bf.mean()
-            x= [0,480]
             y=bf_avg.loc['Blood Flow (ml/s)']
             #scatter methode 
-            fig3.add_trace(go.Scatter(x=x,y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
+            fig3.add_trace(go.Scatter(x=[0,480],y=[y,y],mode='lines', marker_color = 'violet', name= 'Average'))
 
 
 

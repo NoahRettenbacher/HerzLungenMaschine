@@ -17,8 +17,8 @@ colors = {
     'background': '#3e405f', ##f8f9fd
     'text':  ' #c1c3d8',
     'dropdown': "#7981f3",
-    'paper': '#7f83aa'
-}
+    'paper': '#3e405f'
+    }
 
 
 list_of_subjects = []
@@ -59,14 +59,14 @@ fig2 = px.line(df, x="Time (s)", y = "Temp (C)")
 fig3 = px.line(df, x="Time (s)", y = "Blood Flow (ml/s)")
 
 app.layout = html.Div(children=[
-    html.H1(children='Cardiopulmonary Bypass Dashboard', style={'color': colors['text']}),
+    html.H1(children='Cardiopulmonary Bypass Dashboard', style={'color': colors['text'],'background': colors['background']}),
 
     html.Div(children='''
         Select the Patient ID 
-    '''),
+    ''', style= {'color': colors['text'],'background': colors['background']}),
     
     html.Div([
-        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'BackgroundColor': colors['dropdown']}),
+        dcc.Dropdown(options = subj_numbers, placeholder='Select a subject', value='1', id='subject-dropdown', style={'Color': colors['dropdown']}),
     html.Div(id='dd-output-container')
     ],
         style={"width": "5%"}
@@ -127,29 +127,24 @@ def update_figure(value, algorithm_checkmarks):
     # Blood Temperature
     fig2 = px.line(ts, x="Time (s)", y = data_names[2])
 
-    # fig0.update_layout(
-    # plot_bgcolor=colors['background'],
-    # paper_bgcolor=colors['background'],
-    # font_color=colors['text']
-    # )
+    fig0.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['paper'],
+    font_color=colors['text']
 
-    # fig1.update_layout(
-    # plot_bgcolor=colors['background'],
-    # paper_bgcolor=colors['background'],
-    # font_color=colors['text']
-    # )
+    )
 
-    # fig2.update_layout(
-    # plot_bgcolor=colors['background'],
-    # paper_bgcolor=colors['background'],
-    # font_color=colors['text']
-    # )
+    fig1.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['paper'],
+    font_color=colors['text']
+    )
 
-    # fig3.update_layout(
-    # plot_bgcolor=colors['background'],
-    # paper_bgcolor=colors['background'],
-    # font_color=colors['text']
-    # )
+    fig2.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['paper'],
+    font_color=colors['text']
+    )
     
     ### Aufgabe 2: Min / Max ###
 
@@ -197,11 +192,11 @@ def bloodflow_figure(value, bloodflow_checkmarks):
     bf = list_of_subjects[int(value)-1].subject_data
     fig3 = px.line(bf, x="Time (s)", y="Blood Flow (ml/s)")
 
-    # fig3.update_layout(
-    # plot_bgcolor=colors['background'],
-    # paper_bgcolor=colors['background'],
-    # font_color=colors['text']
-    # )
+    fig3.update_layout(
+    plot_bgcolor=colors['background'],
+    paper_bgcolor=colors['paper'],
+    font_color=colors['text']
+    )
     
 
     bf["BF_SMA"] = ut.calculate_SMA(bf["Blood Flow (ml/s)"],4) 
